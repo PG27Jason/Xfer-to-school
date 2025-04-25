@@ -7,9 +7,15 @@
 // Sets default values
 AMyLivingOrganismSpawner::AMyLivingOrganismSpawner()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	SpawnDelay = 3.0f;
+	SpawnHandle.Invalidate();
+}
+
+void AMyLivingOrganismSpawner::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	GetWorldTimerManager().ClearTimer(SpawnHandle);
 }
 
 // Called when the game starts or when spawned
@@ -22,10 +28,23 @@ void AMyLivingOrganismSpawner::BeginPlay()
 
 void AMyLivingOrganismSpawner::SpawnLivingOrganism()
 {
+	if (!IsValid(ClassToSpawn))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ClassToSpawn is not valid"));
+		return;
+	}
+
 	FActorSpawnParameters MySpawnParams;
 	MySpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	GetWorld()->SpawnActor<ALivingOrganism>(ClassToSpawn, GetActorLocation(), GetActorForwardVector().Rotation(), MySpawnParams);
+	if (AActor* NewActor = GetWorld()->SpawnActor<ALivingOrganism>(ClassToSpawn, GetActorLocation(), GetActorForwardVector().Rotation(), MySpawnParams))
+	{
+		// Spawn successful
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to spawn actor"));
+	}
 }
 
 // Called every frame

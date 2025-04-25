@@ -34,7 +34,6 @@ void AAlien::Tick(float deltaSeconds)
 void AAlien::BeginPlay()
 {
 	Super::BeginPlay();
-
 	OnActorHit.AddUniqueDynamic(this, &AAlien::OnAlienHit);
 }
 
@@ -49,6 +48,13 @@ void AAlien::OnAlienHit_Implementation(AActor* SelfActor, AActor* OtherActor, FV
 
 void AAlien::AddForceToBody() const
 {
-	const FVector forceToAdd = BodyMesh->GetMass() * (GetActorForwardVector() * MovementSpeed);
+	const FVector acceleration = GetActorForwardVector() * MovementSpeed;
+	const FVector forceToAdd = BodyMesh->GetMass() * acceleration;
 	BodyMesh->AddForce(forceToAdd, NAME_None, true);
+}
+
+void AAlien::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	OnActorHit.RemoveDynamic(this, &AAlien::OnAlienHit);
 }

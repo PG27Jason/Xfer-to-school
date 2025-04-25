@@ -1,6 +1,8 @@
-#include "C:\Users\TheSa\Downloads\AlienVPredator\AlienVPredator\Intermediate\Build\Win64\x64\AlienVPredatorEditor\Development\UnrealEd\SharedPCH.UnrealEd.Project.NoValFmtStr.ValApi.Cpp20.InclOrderUnreal5_3.h"
 #include "DestructibleStructure.h"
 #include "Components/StaticMeshComponent.h"
+#include "Engine/World.h"
+#include "GameFramework/Actor.h"
+#include "CoreMinimal.h"
 
 ADestructibleStructure::ADestructibleStructure()
 {

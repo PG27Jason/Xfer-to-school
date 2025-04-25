@@ -46,7 +46,6 @@ void ALivingOrganism::BeginPlay()
 {
 	Super::BeginPlay();
 	MyFirstFunction(MyFirstVariable);
-	// GEngine->AddOnScreenDebugMessage(INDEX_NONE, 10.0f, MyColor, FString::Printf(TEXT("MyFirstVariable %d"), MyFirstVariable));
 }
 
 // Called every frame
@@ -54,5 +53,11 @@ void ALivingOrganism::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ALivingOrganism::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	// Cleanup any resources here
 }
 

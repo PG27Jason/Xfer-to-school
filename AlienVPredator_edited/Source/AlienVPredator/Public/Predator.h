@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "LivingOrganism.h"
 #include "DamageInterface.h"
+#include "Projectile.h"
 #include "Predator.generated.h"
 
 /**
@@ -19,11 +20,20 @@ public:
 
 	APredator();
 
-	virtual void Tick(float DeltaTime) override;
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void FireAtAliens();
 
-	virtual void TakeLivingDamage_Implementation() override;
+	UFUNCTION()
+	void OnProjectileHit(AProjectile* Projectile);
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Combat")
+	UFUNCTION()
+	void OnAlienHit(bool bIsGoo, float GooSpeed);
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void CheckFireThreshold();
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 	float Health;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Combat")
@@ -34,9 +44,10 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	FVector FireDirection;
-
-	UFUNCTION()
-	static void OnAlienHit(bool bIsGoo, float GooSpeed);
+	
+	virtual void Tick(float DeltaTime) override;
+	
+	virtual void TakeLivingDamage_Implementation() override;
 
 private:
 	void FireAtAliens() const;

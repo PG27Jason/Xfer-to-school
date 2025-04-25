@@ -19,17 +19,20 @@ class ALIENVPREDATOR_API AAlien : public ALivingOrganism
 {
 	GENERATED_BODY()
 
-	AAlien();
 
 public:
+	AAlien();
 
+	UFUNCTION(BlueprintNativeEvent)
+	void OnAlienHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
+
+
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UStaticMeshComponent> BodyMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UArrowComponent> ArrowComponent;
-
-protected:
 
 	UPROPERTY(BlueprintAssignable)
 	FAlienGooEvent MyGooEvent;
@@ -41,8 +44,8 @@ protected:
 
 	virtual void BeginPlay() override;
 
-	UFUNCTION(BlueprintNativeEvent)
-	void OnAlienHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 
 private:
 

@@ -4,6 +4,9 @@
 #include "Predator.h"
 #include "GameFramework/Actor.h"
 #include "Projectile.h"
+#include "Components/SphereComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Engine/World.h"
 
 APredator::APredator()
 {
@@ -21,24 +24,37 @@ void APredator::Tick(float DeltaTime)
 
 void APredator::TakeLivingDamage_Implementation()
 {
-}
-
-void APredator::CheckFireThreshold() const
-{
-	if (Health <= FireThreshold)
+	Health -= 10.0f;  // Apply damage
+	if (Health <= 0.0f)
 	{
-		FireAtAliens();
+		Destroy();
 	}
 }
 
 void APredator::OnAlienHit(bool bIsGoo, float GooSpeed)
 {
-	
+	if (bIsGoo)
+	{
+		Health -= GooSpeed * 0.1f;
+		if (Health <= 0.0f)
+		{
+			Destroy();
+		}
+	}
 }
 
-void APredator::FireAtAliens() const
+void APredator::CheckFireThreshold()
 {
-	if (ProjectileClass)
+	const float currentHealth = Health;
+	if (currentHealth <= FireThreshold)
+	{
+		FireAtAliens();
+	}
+}
+
+void APredator::FireAtAliens()
+{
+	if (ProjectileClass && GetWorld())
 	{
 		FVector SpawnLocation = GetActorLocation() + FireDirection * 100.0f;
 		FRotator SpawnRotation = FRotator::ZeroRotator;
@@ -48,7 +64,14 @@ void APredator::FireAtAliens() const
 		if (NewProjectile)
 		{
 			NewProjectile->Direction = FireDirection;
+			NewProjectile->PredatorOwner = this;
+			NewProjectile->OnProjectileHit.AddDynamic(this, &APredator::OnProjectileHit);
 		}
 	}
+}
+
+void APredator::OnProjectileHit(AProjectile* Projectile)
+{
+	
 }
 
